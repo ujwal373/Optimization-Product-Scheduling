@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir \"C:\\\\Users\\\\Ujwal Mojidra\\\\Desktop\\\\AAI\\\\project\\\\Optimization Product Scheduling\" /s)"
+      "Bash(dir \"C:\\\\Users\\\\Ujwal Mojidra\\\\Desktop\\\\AAI\\\\project\\\\Optimization Product Scheduling\" /s)",
+      "Bash(find:*)"
     ]
   }
 }
