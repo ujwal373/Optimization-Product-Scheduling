@@ -1,0 +1,224 @@
+# Claude Master Prompt — MAPSO Foundation Build
+
+You are an expert in **operations research, production scheduling, and supply chain optimization**.
+
+Your task is to help me design a **foundation-ready project** called:
+
+## Multi-Agent Production Scheduling Optimizer (MAPSO)
+
+This is not a toy project. Treat it as something intended for **industrial supply-chain / manufacturing optimization roles**.
+
+---
+
+## Project Core Idea
+
+Build a **multi-agent production scheduling system** where **each agent owns a real operational constraint or objective**, and together they converge on an optimized **daily production schedule**.
+
+This mirrors how real factories work:
+- No single “brain”
+- Multiple competing priorities
+- Feasibility before optimality
+- Explicit trade-offs
+
+---
+
+## Agent Architecture (Fixed Design)
+
+### 1. Demand Forecast Agent
+
+**Input**
+- Historical orders
+- Seasonality
+- Backlog
+
+**Output**
+- Required production quantities by SKU and day
+
+**Methods**
+- Baseline: Moving Average / SARIMA
+- Stretch (optional): Prophet or LSTM
+
+Forecasting sets the **target**, not the schedule.
+
+---
+
+### 2. Capacity & Machine Agent (Hard Constraints)
+
+Owns:
+- Machine availability
+- Shift calendars
+- Throughput rates
+- Downtime
+- Labor hours
+
+This agent **rejects infeasible schedules**.
+
+---
+
+### 3. Changeover / Sequence Agent
+
+Models:
+- Sequence-dependent setup times
+
+Example:
+- A → B = 30 minutes  
+- A → C = 120 minutes  
+
+Objective:
+- Minimize total setup time
+
+This component is essential for realism.
+
+---
+
+### 4. Cost & Energy Agent
+
+Tracks:
+- Production cost
+- Overtime cost
+- Energy usage by machine
+- Time-of-use energy windows
+
+Pushes schedules toward lower cost and sustainable operating windows.
+
+---
+
+### 5. Optimization Orchestrator (Non-LLM)
+
+This agent **does not chat**. It optimizes.
+
+**Decision variables**
+- Job sequence
+- Machine assignment
+- Start times
+
+**Multi-objective function**
+
+\[
+\min \;
+\alpha \cdot \text{lateness}
++ \beta \cdot \text{setup\_time}
++ \gamma \cdot \text{cost}
++ \delta \cdot \text{energy}
+\]
+
+Explain this both mathematically and operationally.
+
+---
+
+## Optimization Strategy (Critical)
+
+Use a **layered optimization approach**.
+
+---
+
+### Layer 1: Discrete Feasibility Solver
+
+**OR-Tools CP-SAT**
+
+Handles:
+- Job sequencing
+- Capacity constraints
+- Sequence-dependent changeovers
+
+Produces **guaranteed feasible schedules**.
+
+Acts as the system’s **truth engine**.
+
+---
+
+### Layer 2: Metaheuristic Optimization
+
+**Simulated Annealing**
+
+Neighborhood moves:
+- Swap job order
+- Reassign job to machine
+- Shift start times within slack
+
+Used for:
+- Exploration
+- Scalability
+- Solver comparison
+
+---
+
+### Layer 3: Continuous Optimization (Preference Learning)
+
+**Gradient Descent or Trust-Region Methods**
+
+Purpose:
+- Tune weights (α, β, γ, δ)
+- Adjust penalty strengths
+
+Important:
+- Gradients do **not** decide job sequences
+- They only tune business trade-offs
+
+Trust-region ensures stability under noisy demand.
+
+Explain why **Newton’s method is not used initially** (scope vs value).
+
+---
+
+## Optimization Flow (Must Be Explicit)
+
+1. Forecast demand  
+2. Generate baseline feasible schedule (FIFO / EDD)  
+3. Apply CP-SAT optimization  
+4. Optionally refine using Simulated Annealing  
+5. Tune objective weights via continuous optimization  
+6. Roll forward using rolling horizon optimization  
+7. Explain trade-offs in plain English  
+
+---
+
+## Tech Stack (Clean)
+
+- Python
+- OR-Tools (CP-SAT)
+- Pandas + NumPy
+- Streamlit (Gantt chart + KPIs)
+- FastAPI (optional)
+- No unnecessary frameworks
+
+---
+
+## Evaluation Requirements
+
+Compare:
+- Baseline heuristic
+- CP-SAT optimized schedule
+- Simulated Annealing optimized schedule
+
+Metrics:
+- Lateness / tardiness
+- Makespan
+- Setup time
+- Overtime
+- Energy usage
+- Runtime
+- Feasibility rate
+
+Include **before vs after** analysis.
+
+---
+
+## Output Expectations
+
+Help produce:
+1. Clean project structure  
+2. Clear mathematical formulation  
+3. Justified algorithm choices  
+4. Realistic synthetic dataset schema  
+5. Business-level explanation logic  
+6. A foundation extendable to real factories  
+
+Write with:
+- Engineering rigor
+- Operations realism
+- Interview-ready clarity
+
+Do **not** oversimplify.  
+Do **not** handwave constraints.  
+Assume the reader understands optimization theory.
